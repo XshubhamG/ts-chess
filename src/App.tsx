@@ -1,7 +1,19 @@
-const App = () => {
-  return (
-    <div>Chess App</div>
-  )
-}
+import { useState } from 'react';
 
-export default App
+import Board from './components/board/Board';
+import BoardModel from './models/BoardModel';
+
+const App = () => {
+  const [board] = useState(new BoardModel());
+
+  return (
+    <>
+      <h1>Chess App</h1>
+      <div>
+        <Board board={board} playingAsWhite />
+      </div>
+    </>
+  );
+};
+
+export default App;
