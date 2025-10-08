@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import Board from './components/board/Board';
-import BoardModel from './models/BoardModel';
+import Board from "./components/board/Board";
+import BoardModel from "./models/BoardModel";
 
 const App = () => {
   const [board] = useState(new BoardModel());
@@ -9,9 +9,9 @@ const App = () => {
   return (
     <>
       <h1>Chess App</h1>
-      <div>
+      <main>
         <Board board={board} playingAsWhite />
-      </div>
+      </main>
     </>
   );
 };
