@@ -1,6 +1,6 @@
 import type BoardModel from "../../models/BoardModel";
 import type SquareModel from "../../models/SquareModel";
-import { isLightSquare } from "../../services/square-service";
+
 import Square from "./Square";
 
 interface Props {
@@ -15,14 +15,17 @@ const asWhite = (square: SquareModel, isTrue: boolean): string => {
 const Board = ({ board, playingAsWhite }: Props) => {
   return (
     <div className="mx-auto max-w-2xl">
-      <h2>Board</h2>
       <section
         className={`mx-auto my-4 grid aspect-square grid-cols-8 grid-rows-8 border`}>
         {board.squares.map((square: SquareModel) => (
           <div
             key={`square_${square.row}_${square.column}`}
-            className={`h-full w-full ${asWhite(square, playingAsWhite)} ${isLightSquare(square) ? "bg-slate-50" : "bg-amber-700"}`}>
-            <Square square={square} />
+            className={`h-full w-full ${asWhite(square, playingAsWhite)} ${square.isLightSquare() ? "bg-gray-100" : "bg-amber-700"}`}>
+            <Square
+              square={square}
+              showCoordinateRow={square.column == 0}
+              showCoordinateColumn={square.row == 0}
+            />
           </div>
         ))}
       </section>
