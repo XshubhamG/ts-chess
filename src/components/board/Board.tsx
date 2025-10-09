@@ -1,10 +1,13 @@
+import { useState } from "react";
 import type BoardModel from "../../models/BoardModel";
 import type SquareModel from "../../models/SquareModel";
 
+import type { PlayerColor } from "../../models/PlayerModel";
 import Square from "./Square";
 
 interface Props {
   board: BoardModel;
+  playerTurn: PlayerColor;
   playingAsWhite: boolean;
 }
 
@@ -12,7 +15,11 @@ const asWhite = (square: SquareModel, isTrue: boolean): string => {
   return `col-start-${isTrue ? square.column + 1 : 8 - square.column} row-start-${isTrue ? 8 - square.row : square.row + 1}`;
 };
 
-const Board = ({ board, playingAsWhite }: Props) => {
+const Board = ({ board, playerTurn, playingAsWhite }: Props) => {
+  const [selectedSquare, setSelectedSquare] = useState<SquareModel | null>(
+    null
+  );
+
   return (
     <div className="mx-auto max-w-2xl">
       <section
@@ -20,11 +27,14 @@ const Board = ({ board, playingAsWhite }: Props) => {
         {board.squares.map((square: SquareModel) => (
           <div
             key={`square_${square.row}_${square.column}`}
-            className={`h-full w-full ${asWhite(square, playingAsWhite)} ${square.isLightSquare() ? "bg-gray-100" : "bg-amber-700"}`}>
+            className={`h-full w-full ${asWhite(square, playingAsWhite)} `}>
             <Square
               square={square}
               showCoordinateRow={square.column == 0}
               showCoordinateColumn={square.row == 0}
+              canSelect={square.piece?.color == playerTurn}
+              isSelected={selectedSquare == square}
+              select={setSelectedSquare}
             />
           </div>
         ))}
