@@ -8,6 +8,7 @@ interface Props {
   showCoordinateColumn: boolean;
   canSelect: boolean;
   isSelected?: boolean;
+  isValidMove?: boolean;
   select: (square: SquareModel | null) => void;
 }
 
@@ -16,6 +17,7 @@ const Square = ({
   showCoordinateColumn,
   showCoordinateRow,
   isSelected,
+  isValidMove,
   canSelect,
   select,
 }: Props) => {
@@ -24,12 +26,13 @@ const Square = ({
 
   const backgroundColor = useMemo(() => {
     if (isSelected) return "bg-green-500";
+    if (isValidMove) return "bg-blue-400";
     if (square.isLightSquare()) return "bg-gray-100";
     return "bg-amber-700";
-  }, [isSelected, square]);
+  }, [isSelected, isValidMove, square]);
 
   const onClick = () => {
-    if (canSelect) {
+    if (canSelect || isValidMove) {
       select(isSelected ? null : square);
     }
   };
@@ -46,7 +49,7 @@ const Square = ({
         {showCoordinateColumn && square.getColumnCoordinates()}
       </span>
 
-      {square.piece && (
+      {square.piece && IconComponent && (
         <IconComponent
           className={`text-5xl ${
             isWhite
@@ -54,6 +57,14 @@ const Square = ({
               : "text-black drop-shadow-[0_1px_1px_rgba(255,255,255,0.3)]"
           }`}
         />
+      )}
+
+      {isValidMove && !square.piece && (
+        <div className="h-4 w-4 rounded-full bg-blue-600 opacity-70" />
+      )}
+
+      {isValidMove && square.piece && (
+        <div className="absolute inset-0 rounded-full border-4 border-blue-600 opacity-70" />
       )}
     </div>
   );

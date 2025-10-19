@@ -14,7 +14,7 @@ const columnNotation: Record<number, string> = {
 export default class SquareModel {
   readonly row: number;
   readonly column: number;
-  piece!: PieceModel;
+  piece?: PieceModel;
 
   constructor(row: number, column: number) {
     this.row = row;
@@ -23,6 +23,14 @@ export default class SquareModel {
 
   setPiece(piece: PieceModel): void {
     this.piece = piece;
+  }
+
+  hasPiece(): boolean {
+    return !!this.piece;
+  }
+
+  isEmpty(): boolean {
+    return !this.piece;
   }
 
   getRowCoordinates(): string {

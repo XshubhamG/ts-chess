@@ -9,16 +9,38 @@ interface Props {
   board: BoardModel;
   playerTurn: PlayerColor;
   playingAsWhite: boolean;
+  onMove: (from: SquareModel, to: SquareModel) => void;
 }
 
 const asWhite = (square: SquareModel, isTrue: boolean): string => {
   return `col-start-${isTrue ? square.column + 1 : 8 - square.column} row-start-${isTrue ? 8 - square.row : square.row + 1}`;
 };
 
-const Board = ({ board, playerTurn, playingAsWhite }: Props) => {
+const Board = ({ board, playerTurn, playingAsWhite, onMove }: Props) => {
   const [selectedSquare, setSelectedSquare] = useState<SquareModel | null>(
     null
   );
+  const [validMoves, setValidMoves] = useState<SquareModel[]>([]);
+
+  const handleSquareSelect = (square: SquareModel | null) => {
+    if (square === null) {
+      setSelectedSquare(null);
+      setValidMoves([]);
+      return;
+    }
+
+    if (selectedSquare && validMoves.includes(square)) {
+      onMove(selectedSquare, square);
+      setSelectedSquare(null);
+      setValidMoves([]);
+      return;
+    }
+
+    if (square.piece?.color === playerTurn) {
+      setSelectedSquare(square);
+      setValidMoves(board.getValidMoves(square));
+    }
+  };
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -34,7 +56,8 @@ const Board = ({ board, playerTurn, playingAsWhite }: Props) => {
               showCoordinateColumn={square.row == 0}
               canSelect={square.piece?.color == playerTurn}
               isSelected={selectedSquare == square}
-              select={setSelectedSquare}
+              isValidMove={validMoves.includes(square)}
+              select={handleSquareSelect}
             />
           </div>
         ))}
